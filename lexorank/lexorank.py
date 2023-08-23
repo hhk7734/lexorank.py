@@ -57,3 +57,12 @@ class LexoRank:
     @property
     def decimal(self) -> Decimal:
         return self._decimal
+
+    def __str__(self) -> str:
+        decimal = str(self._decimal)
+        index = decimal.index(self._decimal.decimal_point)
+
+        whole = decimal[:index].zfill(self._whole_number_size)
+        decimal = decimal[index + 1 :]
+
+        return f"{self._bucket.value}{self._bucket_separator}{whole}{self._decimal.decimal_point}{decimal}"

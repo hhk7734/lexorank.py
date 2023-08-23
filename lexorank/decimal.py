@@ -24,6 +24,10 @@ class Decimal:
         exponent = index - len(value) + 1
         return Decimal(Integer.parse(integer, base), exponent, decimal_point=decimal_point)
 
+    @property
+    def decimal_point(self) -> str:
+        return self._decimal_point
+
     def __neg__(self) -> Self:
         return self.__class__(-self._integer, self._exponent)
 
