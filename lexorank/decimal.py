@@ -8,8 +8,7 @@ DECIMAL_POINT = ":"
 
 class Decimal:
     def __init__(self, integer: Integer, exponent: int, decimal_point: str = DECIMAL_POINT) -> None:
-        self._integer = integer
-        self._exponent = exponent
+        self._integer, self._exponent = self._rstrip(integer, exponent)
         self._decimal_point = decimal_point
 
     @staticmethod
@@ -67,3 +66,13 @@ class Decimal:
         if self._exponent > 0:
             return sign + integer + "0" * self._exponent + self._decimal_point
         return sign + integer + self._decimal_point
+
+    @staticmethod
+    def _rstrip(integer: Integer, exponent: int) -> tuple[Integer, int]:
+        index = 0
+        for digit in reversed(integer.digits):
+            if digit != 0:
+                break
+            index += 1
+
+        return integer >> index, exponent + index
