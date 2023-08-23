@@ -1,15 +1,27 @@
 from typing_extensions import Self
 
-from lexorank.integer import Integer
+from lexorank.base import Base, Base36
+from lexorank.integer import Integer, Sign
 
 DECIMAL_POINT = ":"
 
 
 class Decimal:
-    def __init__(self, integer: Integer, exponent: int, decimal_point=DECIMAL_POINT) -> None:
+    def __init__(self, integer: Integer, exponent: int, decimal_point: str = DECIMAL_POINT) -> None:
         self._integer = integer
         self._exponent = exponent
         self._decimal_point = decimal_point
+
+    @staticmethod
+    def parse(value: str, base: Base = Base36, decimal_point: str = DECIMAL_POINT) -> "Decimal":
+        try:
+            index = value.index(decimal_point)
+        except ValueError:
+            return Decimal(Integer.parse(value, base), 0, decimal_point)
+
+        integer = value[:index] + value[index + 1 :]
+        exponent = index - len(value) + 1
+        return Decimal(Integer.parse(integer, base), exponent, decimal_point)
 
     def __neg__(self) -> Self:
         return self.__class__(-self._integer, self._exponent)
@@ -44,11 +56,14 @@ class Decimal:
         return self._integer.to_base10() * (self._integer.base**self._exponent)
 
     def __str__(self) -> str:
-        integer = str(self._integer)
+        sign = "" if self._integer.sign == Sign.POSITIVE else "-"
+        integer = str(abs(self._integer))
         if self._exponent < 0:
             if len(integer) < abs(self._exponent):
                 integer = "0" * (abs(self._exponent) - len(integer) + 1) + integer
-            return integer[: self._exponent] + self._decimal_point + integer[self._exponent :]
+            return (
+                sign + integer[: self._exponent] + self._decimal_point + integer[self._exponent :]
+            )
         if self._exponent > 0:
-            return integer + "0" * self._exponent
-        return integer
+            return sign + integer + "0" * self._exponent
+        return sign + integer

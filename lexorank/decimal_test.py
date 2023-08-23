@@ -3,6 +3,19 @@ from lexorank.decimal import Decimal
 from lexorank.integer import Integer
 
 
+def test_parse():
+    cases = [
+        {"in": ("12:3", Base10), "want": "12:3"},
+        {"in": ("0000:00ri", Base36), "want": "0:00ri"},
+        {"in": ("-0000:00ri", Base36), "want": "-0:00ri"},
+        {"in": ("r^i", Base64), "want": "r^i"},
+    ]
+
+    for c in cases:
+        got = str(Decimal.parse(*c["in"]))
+        assert got == c["want"]
+
+
 def test_add():
     cases = [
         {"in": (("12345", Base10, -3), ("55", Base10, -1)), "want": 17.845},

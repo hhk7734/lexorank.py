@@ -38,6 +38,10 @@ class Integer:
         return list(reversed(self._rdigits))
 
     @property
+    def sign(self) -> Sign:
+        return self._sign
+
+    @property
     def base(self) -> int:
         return self._base.base()
 
@@ -55,6 +59,9 @@ class Integer:
 
     def __neg__(self) -> Self:
         return self.__class__(self._rdigits.copy(), -self._sign, self._base)
+
+    def __abs__(self) -> Self:
+        return self.__class__(self._rdigits.copy(), Sign.POSITIVE, self._base)
 
     def __add__(self, other: Self) -> Self:
         if self._sign != other._sign:

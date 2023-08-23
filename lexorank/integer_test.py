@@ -2,7 +2,7 @@ from lexorank.base import Base10, Base36, Base64
 from lexorank.integer import Integer
 
 
-def test_from_base():
+def test_parse():
     cases = [
         {"in": ("123", Base10), "want": [1, 2, 3]},
         {"in": ("ri", Base36), "want": [27, 18]},
