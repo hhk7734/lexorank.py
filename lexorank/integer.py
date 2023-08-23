@@ -126,10 +126,10 @@ class Integer:
         return len(self._rdigits)
 
     @staticmethod
-    def _rstrip(digits: list[int]) -> list[int]:
-        index = len(digits)
+    def _rstrip(reversed_digits: list[int]) -> list[int]:
+        index = len(reversed_digits)
         for i in reversed(range(index)):
-            if digits[i] != 0:
+            if reversed_digits[i] != 0:
                 index = i + 1
                 break
-        return digits[:index]
+        return reversed_digits[:index]
