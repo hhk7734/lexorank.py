@@ -45,7 +45,7 @@ class LexoRank:
             raise ValueError(f"invalid lexorank format: {value}")
 
         bucket = Bucket(int(value[0]))
-        decimal = Decimal.parse(value[2:], base, decimal_point)
+        decimal = Decimal.parse(value[2:], base, decimal_point=decimal_point)
         return LexoRank(
             bucket, decimal, bucket_separator=bucket_separator, whole_number_size=whole_number_size
         )

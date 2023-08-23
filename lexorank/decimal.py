@@ -7,20 +7,22 @@ DECIMAL_POINT = ":"
 
 
 class Decimal:
-    def __init__(self, integer: Integer, exponent: int, decimal_point: str = DECIMAL_POINT) -> None:
+    def __init__(
+        self, integer: Integer, exponent: int, *, decimal_point: str = DECIMAL_POINT
+    ) -> None:
         self._integer, self._exponent = self._rstrip(integer, exponent)
         self._decimal_point = decimal_point
 
     @staticmethod
-    def parse(value: str, base: Base = Base36, decimal_point: str = DECIMAL_POINT) -> "Decimal":
+    def parse(value: str, base: Base = Base36, *, decimal_point: str = DECIMAL_POINT) -> "Decimal":
         try:
             index = value.index(decimal_point)
         except ValueError:
-            return Decimal(Integer.parse(value, base), 0, decimal_point)
+            return Decimal(Integer.parse(value, base), 0, decimal_point=decimal_point)
 
         integer = value[:index] + value[index + 1 :]
         exponent = index - len(value) + 1
-        return Decimal(Integer.parse(integer, base), exponent, decimal_point)
+        return Decimal(Integer.parse(integer, base), exponent, decimal_point=decimal_point)
 
     def __neg__(self) -> Self:
         return self.__class__(-self._integer, self._exponent)
