@@ -8,7 +8,7 @@ def test_parse():
         {"in": ("12:3", Base10), "want": "12:3"},
         {"in": ("0000:00ri", Base36), "want": "0:00ri"},
         {"in": ("-0000:00ri", Base36), "want": "-0:00ri"},
-        {"in": ("r^i", Base64), "want": "r^i"},
+        {"in": ("r^i", Base64), "want": "r^i:"},
     ]
 
     for c in cases:
@@ -33,7 +33,7 @@ def test_add():
 def test_mul():
     cases = [
         {"in": (("12345", Base10, -3), ("55", Base10, -1)), "want": "67:8975"},
-        {"in": (("12345", Base10, 1), ("5", Base10, -1)), "want": "61725"},
+        {"in": (("12345", Base10, 1), ("5", Base10, -1)), "want": "61725:"},
         {"in": (("12as5", Base36, 0), ("i", Base36, -1)), "want": "j5e2:i"},
     ]
 
@@ -60,7 +60,7 @@ def test_str():
         {"in": ("12345", Base10, -3), "want": "12:345"},
         {"in": ("21i3v9", Base36, -4), "want": "21:i3v9"},
         {"in": ("21i3v9", Base36, -10), "want": "0:000021i3v9"},
-        {"in": ("21i3v9^", Base64, 2), "want": "21i3v9^00"},
+        {"in": ("21i3v9^", Base64, 2), "want": "21i3v9^00:"},
     ]
 
     for c in cases:

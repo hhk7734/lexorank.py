@@ -65,5 +65,5 @@ class Decimal:
                 sign + integer[: self._exponent] + self._decimal_point + integer[self._exponent :]
             )
         if self._exponent > 0:
-            return sign + integer + "0" * self._exponent
-        return sign + integer
+            return sign + integer + "0" * self._exponent + self._decimal_point
+        return sign + integer + self._decimal_point
