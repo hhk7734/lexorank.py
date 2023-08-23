@@ -24,6 +24,15 @@ class Integer:
         self._sign = sign
         self._base = base
 
+    @staticmethod
+    def parse(value: str, base: Base = Base36) -> "Integer":
+        sign = Sign.POSITIVE if value[0] != "-" else Sign.NEGATIVE
+        if value[0] in ("+", "-"):
+            value = value[1:]
+
+        digits = [base.to_base10(digit) for digit in reversed(value)]
+        return Integer(digits, sign, base)
+
     @property
     def digits(self) -> list[int]:
         return list(reversed(self._rdigits))
@@ -31,15 +40,6 @@ class Integer:
     @property
     def base(self) -> int:
         return self._base.base()
-
-    @staticmethod
-    def from_base(value: str, base: Base = Base36) -> "Integer":
-        sign = Sign.POSITIVE if value[0] != "-" else Sign.NEGATIVE
-        if value[0] in ("+", "-"):
-            value = value[1:]
-
-        digits = [base.to_base10(digit) for digit in reversed(value)]
-        return Integer(digits, sign, base)
 
     @staticmethod
     def from_base10(value: int, base: Base = Base36) -> "Integer":

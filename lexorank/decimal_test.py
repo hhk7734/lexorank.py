@@ -11,8 +11,8 @@ def test_add():
     ]
 
     for c in cases:
-        a = Decimal(Integer.from_base(c["in"][0][0], c["in"][0][1]), c["in"][0][2])
-        b = Decimal(Integer.from_base(c["in"][1][0], c["in"][1][1]), c["in"][1][2])
+        a = Decimal(Integer.parse(c["in"][0][0], c["in"][0][1]), c["in"][0][2])
+        b = Decimal(Integer.parse(c["in"][1][0], c["in"][1][1]), c["in"][1][2])
         got = (a + b).to_base10()
         assert got == c["want"]
 
@@ -25,8 +25,8 @@ def test_mul():
     ]
 
     for c in cases:
-        a = Decimal(Integer.from_base(c["in"][0][0], c["in"][0][1]), c["in"][0][2])
-        b = Decimal(Integer.from_base(c["in"][1][0], c["in"][1][1]), c["in"][1][2])
+        a = Decimal(Integer.parse(c["in"][0][0], c["in"][0][1]), c["in"][0][2])
+        b = Decimal(Integer.parse(c["in"][1][0], c["in"][1][1]), c["in"][1][2])
         got = str(a * b)
         assert got == c["want"]
 
@@ -38,7 +38,7 @@ def test_whole():
     ]
 
     for c in cases:
-        got = str(Decimal(Integer.from_base(c["in"][0], c["in"][1]), c["in"][2]).whole())
+        got = str(Decimal(Integer.parse(c["in"][0], c["in"][1]), c["in"][2]).whole())
         assert got == c["want"]
 
 
@@ -51,5 +51,5 @@ def test_str():
     ]
 
     for c in cases:
-        got = str(Decimal(Integer.from_base(c["in"][0], c["in"][1]), c["in"][2]))
+        got = str(Decimal(Integer.parse(c["in"][0], c["in"][1]), c["in"][2]))
         assert got == c["want"]

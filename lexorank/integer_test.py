@@ -10,7 +10,7 @@ def test_from_base():
     ]
 
     for c in cases:
-        got = Integer.from_base(*c["in"]).digits
+        got = Integer.parse(*c["in"]).digits
         assert got == c["want"]
 
 
