@@ -1,9 +1,11 @@
 from enum import IntEnum
+from functools import lru_cache
 
 from typing_extensions import Self
 
 from lexorank.base import Base, Base36
 from lexorank.decimal import DECIMAL_POINT, Decimal
+from lexorank.integer import Integer
 
 BUCKET_SEPARATOR = "|"
 WHOLE_NUMBER_SIZE = 6
@@ -50,6 +52,38 @@ class LexoRank:
             bucket, decimal, bucket_separator=bucket_separator, whole_number_size=whole_number_size
         )
 
+    @staticmethod
+    @lru_cache()
+    def middle(
+        bucket: Bucket,
+        base: Base = Base36,
+        *,
+        decimal_point: str = DECIMAL_POINT,
+        bucket_separator: str = BUCKET_SEPARATOR,
+        whole_number_size: int = WHOLE_NUMBER_SIZE,
+    ) -> "LexoRank":
+        max_decimal = Decimal.parse(
+            "1" + "0" * whole_number_size, base, decimal_point=decimal_point
+        )
+        half_decimal = Decimal.parse(
+            "0" + decimal_point + base.from_base10(base.base() // 2),
+            base,
+            decimal_point=decimal_point,
+        )
+        return LexoRank(
+            bucket,
+            max_decimal * half_decimal,
+            bucket_separator=bucket_separator,
+            whole_number_size=whole_number_size,
+        )
+
+    def next(self, step: int = 16) -> Self:
+        return self.__class__(
+            self._bucket,
+            self._decimal
+            + self._step(step, self._decimal.base, decimal_point=self._decimal.decimal_point),  # type: ignore[arg-type]
+        )
+
     @property
     def bucket(self) -> Bucket:
         return self._bucket
@@ -66,3 +100,11 @@ class LexoRank:
         decimal = decimal[index + 1 :]
 
         return f"{self._bucket.value}{self._bucket_separator}{whole}{self._decimal.decimal_point}{decimal}"
+
+    @staticmethod
+    @lru_cache()
+    def _step(
+        step: int = 16, base: Base = Base36, *, decimal_point: str = DECIMAL_POINT
+    ) -> Decimal:
+        s = Integer.from_base10(step, base)
+        return Decimal(s, 0, decimal_point=decimal_point)

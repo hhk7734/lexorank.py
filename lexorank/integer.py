@@ -42,8 +42,8 @@ class Integer:
         return self._sign
 
     @property
-    def base(self) -> int:
-        return self._base.base()
+    def base(self) -> Base:
+        return self._base
 
     @staticmethod
     def from_base10(value: int, base: Base = Base36) -> "Integer":
