@@ -63,7 +63,7 @@ class Decimal:
         return self._integer << self._exponent
 
     def to_base10(self) -> float:
-        return self._integer.to_base10() * (self.base.base() ** self._exponent)
+        return int(self._integer) * (self.base.base() ** self._exponent)
 
     def __str__(self) -> str:
         sign = "" if self._integer.sign == Sign.POSITIVE else "-"

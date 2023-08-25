@@ -135,12 +135,6 @@ class Integer:
     def __le__(self, other: object):
         return not self.__gt__(other)
 
-    def to_base10(self) -> int:
-        value = 0
-        for digit in self._digits:
-            value = value * self._base.base() + digit
-        return self._sign.value * value
-
     def __str__(self) -> str:
         if len(self) == 0:
             return "0"
@@ -150,6 +144,12 @@ class Integer:
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} value={self.__str__()}, base={self._base.base()}>"
+
+    def __int__(self) -> int:
+        value = 0
+        for digit in self._digits:
+            value = value * self._base.base() + digit
+        return self._sign.value * value
 
     def __len__(self) -> int:
         return len(self._digits)
