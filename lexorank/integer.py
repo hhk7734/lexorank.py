@@ -169,7 +169,7 @@ class Integer:
         return f"{'-' if self._sign == Sign.NEGATIVE else ''}{num}"
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} value={self.__str__()}, base={self._base.base()}>"
+        return f"<{self.__class__.__name__} value={self}, base={self._base.base()}>"
 
     def __int__(self) -> int:
         value = 0

@@ -73,6 +73,9 @@ class Decimal:
             return sign + intger_str + "0" * self._exponent + self._decimal_point
         return sign + intger_str + self._decimal_point
 
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__} value={self}, base={self.base.base()}>"
+
     def __float__(self) -> float:
         return float(int(self._integer) * (self.base.base() ** self._exponent))
 
