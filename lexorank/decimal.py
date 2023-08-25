@@ -86,7 +86,7 @@ class Decimal:
 
         return value >> index, exponent + index
 
-    def _type_guard(self, other: object) -> "Decimal":  # type: ignore[return-value]
+    def _type_guard(self, other: object) -> "Decimal":
         if isinstance(other, (int, str, float, Integer)):
             return parse(other, self.base)
         if isinstance(other, Decimal):

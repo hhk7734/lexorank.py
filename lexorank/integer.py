@@ -188,7 +188,7 @@ class Integer:
 
         return []
 
-    def _type_guard(self, other: object) -> "Integer":  # type: ignore[return-value]
+    def _type_guard(self, other: object) -> "Integer":
         if isinstance(other, (int, str)):
             return parse(other, self._base)
         if isinstance(other, Integer):
