@@ -51,9 +51,6 @@ class Decimal:
             return self._integer >> abs(self._exponent)
         return self._integer << self._exponent
 
-    def to_base10(self) -> float:
-        return int(self._integer) * (self.base.base() ** self._exponent)
-
     def __str__(self) -> str:
         sign = "" if self._integer.sign == Sign.POSITIVE else "-"
         intger_str = str(abs(self._integer))
@@ -69,6 +66,9 @@ class Decimal:
         if self._exponent > 0:
             return sign + intger_str + "0" * self._exponent + self._decimal_point
         return sign + intger_str + self._decimal_point
+
+    def __float__(self) -> float:
+        return float(int(self._integer) * (self.base.base() ** self._exponent))
 
     @staticmethod
     def _rstrip(value: Integer, exponent: int) -> tuple[Integer, int]:

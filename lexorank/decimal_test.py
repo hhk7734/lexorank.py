@@ -29,8 +29,7 @@ def test_add():
     for c in cases:
         a = Decimal(integer.parse(c["in"][0][0], c["in"][0][1]), c["in"][0][2])
         b = Decimal(integer.parse(c["in"][1][0], c["in"][1][1]), c["in"][1][2])
-        got = (a + b).to_base10()
-        assert got == c["want"]
+        assert float(a + b) == c["want"]
 
 
 def test_mul():
