@@ -40,7 +40,9 @@ class Integer:
     def __abs__(self) -> Self:
         return self.__class__(self._digits.copy(), Sign.POSITIVE, self._base)
 
-    def __add__(self, other: Self) -> Self:
+    def __add__(self, other: object) -> Self:
+        other = self._type_guard(other)
+
         if self._sign != other._sign:
             return self - (-other)
 
@@ -60,10 +62,14 @@ class Integer:
 
         return self.__class__(list(reversed(rdigits)), self._sign, self._base)
 
-    def __sub__(self, other: Self) -> Self:
+    def __sub__(self, other: object) -> Self:
+        other = self._type_guard(other)
+
         raise NotImplementedError
 
-    def __mul__(self, other: Self) -> Self:
+    def __mul__(self, other: object) -> Self:
+        other = self._type_guard(other)
+
         rdigits = [0] * (len(self) + len(other))
 
         for i in range(len(self)):
@@ -86,7 +92,9 @@ class Integer:
             raise ValueError("shift count must be non-negative")
         return self.__class__(self._digits[: len(self) - other], self._sign, self._base)
 
-    def __eq__(self, other: Self):  # type: ignore[override]
+    def __eq__(self, other: object):
+        other = self._type_guard(other)
+
         if len(self) != len(other):
             return False
         if len(self) == 0:
@@ -98,7 +106,9 @@ class Integer:
                 return False
         return True
 
-    def __gt__(self, other: Self):
+    def __gt__(self, other: object):
+        other = self._type_guard(other)
+
         if len(self) == 0 and len(other) == 0:
             return False
         if self._sign > other._sign:
@@ -116,13 +126,13 @@ class Integer:
                 return self._sign == Sign.NEGATIVE
         return False
 
-    def __ge__(self, other: Self):
+    def __ge__(self, other: object):
         return self.__gt__(other) or self.__eq__(other)
 
-    def __lt__(self, other: Self):
+    def __lt__(self, other: object):
         return not self.__ge__(other)
 
-    def __le__(self, other: Self):
+    def __le__(self, other: object):
         return not self.__gt__(other)
 
     def to_base10(self) -> int:
@@ -151,6 +161,13 @@ class Integer:
                 return digits[i:]
 
         return []
+
+    def _type_guard(self, other: object) -> "Integer":  # type: ignore[return-value]
+        if isinstance(other, (int, str)):
+            return parse(other, self._base)
+        if isinstance(other, Integer):
+            return other
+        raise ValueError(f"unsupported operand type(s) {type(other)}")
 
 
 def parse(value: str | int, base: Base = Base36) -> Integer:

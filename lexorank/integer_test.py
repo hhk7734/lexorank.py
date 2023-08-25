@@ -19,36 +19,28 @@ def test_parse():
 
 def test_add():
     cases = [
-        {"in": (123, 356), "want": 479},
-        {
-            "in": (-11230124540123123124, -12315810924310958102938109238190284),
-            "want": -12315810924310969333062649361313408,
-        },
+        {"in": (123, 356)},
+        {"in": (-11230124540123123124, -12315810924310958102938109238190284)},
     ]
 
     for c in cases:
         a = parse(c["in"][0])
         b = parse(c["in"][1])
-        got = (a + b).to_base10()
-        assert got == c["want"]
+        assert (a + b) == (c["in"][0] + c["in"][1])
 
 
 def test_mul():
     cases = [
-        {"in": (123, 356), "want": 43788},
-        {"in": (-157564, 123), "want": -19380372},
-        {
-            "in": (-11230124540123123124, -12315810924310958102938109238190284),
-            "want": 138308090492620934298311599366068267126028607872527216,
-        },
-        {"in": (0, -123), "want": 0},
+        {"in": (123, 356)},
+        {"in": (-157564, 123)},
+        {"in": (-11230124540123123124, -12315810924310958102938109238190284)},
+        {"in": (0, -123)},
     ]
 
     for c in cases:
         a = parse(c["in"][0])
         b = parse(c["in"][1])
-        got = (a * b).to_base10()
-        assert got == c["want"]
+        assert (a * b) == (c["in"][0] * c["in"][1])
 
 
 def test_lshift():
@@ -59,8 +51,7 @@ def test_lshift():
 
     for c in cases:
         a = parse(c["in"][0])
-        got = (a << c["in"][1]).to_base10()
-        assert got == c["want"]
+        assert (a << c["in"][1]) == c["want"]
 
 
 def test_rshift():
@@ -71,8 +62,7 @@ def test_rshift():
 
     for c in cases:
         a = parse(c["in"][0])
-        got = (a >> c["in"][1]).to_base10()
-        assert got == c["want"]
+        assert (a >> c["in"][1]) == c["want"]
 
 
 def test_eq():
@@ -130,5 +120,4 @@ def test_str():
     ]
 
     for c in cases:
-        got = str(parse(*c["in"]))
-        assert got == c["want"]
+        assert str(parse(*c["in"])) == c["want"]
