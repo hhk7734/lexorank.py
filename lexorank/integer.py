@@ -86,6 +86,45 @@ class Integer:
             raise ValueError("shift count must be non-negative")
         return self.__class__(self._digits[: len(self) - other], self._sign, self._base)
 
+    def __eq__(self, other: Self):  # type: ignore[override]
+        if len(self) != len(other):
+            return False
+        if len(self) == 0:
+            return True
+        if self._sign != other._sign:
+            return False
+        for a, b in zip(self._digits, other._digits):
+            if a != b:
+                return False
+        return True
+
+    def __gt__(self, other: Self):
+        if len(self) == 0 and len(other) == 0:
+            return False
+        if self._sign > other._sign:
+            return True
+        if self._sign < other._sign:
+            return False
+        if len(self) > len(other):
+            return self._sign == Sign.POSITIVE
+        if len(self) < len(other):
+            return self._sign == Sign.NEGATIVE
+        for a, b in zip(self._digits, other._digits):
+            if a > b:
+                return self._sign == Sign.POSITIVE
+            if a < b:
+                return self._sign == Sign.NEGATIVE
+        return False
+
+    def __ge__(self, other: Self):
+        return self.__gt__(other) or self.__eq__(other)
+
+    def __lt__(self, other: Self):
+        return not self.__ge__(other)
+
+    def __le__(self, other: Self):
+        return not self.__gt__(other)
+
     def to_base10(self) -> int:
         value = 0
         for digit in self._digits:
@@ -98,6 +137,9 @@ class Integer:
 
         num = "".join([self._base.from_base10(digit) for digit in self._digits])
         return f"{'-' if self._sign == Sign.NEGATIVE else ''}{num}"
+
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__} value={self.__str__()}, base={self._base.base()}>"
 
     def __len__(self) -> int:
         return len(self._digits)
