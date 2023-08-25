@@ -3,9 +3,9 @@ from functools import lru_cache
 
 from typing_extensions import Self
 
+from lexorank import integer
 from lexorank.base import Base, Base36
 from lexorank.decimal import DECIMAL_POINT, Decimal
-from lexorank.integer import Integer
 
 BUCKET_SEPARATOR = "|"
 WHOLE_NUMBER_SIZE = 6
@@ -106,5 +106,5 @@ class LexoRank:
     def _step(
         step: int = 16, base: Base = Base36, *, decimal_point: str = DECIMAL_POINT
     ) -> Decimal:
-        s = Integer.from_base10(step, base)
+        s = integer.parse(step, base)
         return Decimal(s, 0, decimal_point=decimal_point)

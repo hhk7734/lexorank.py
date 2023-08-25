@@ -1,5 +1,6 @@
 from typing_extensions import Self
 
+from lexorank import integer
 from lexorank.base import Base, Base36
 from lexorank.integer import Integer, Sign
 
@@ -8,9 +9,9 @@ DECIMAL_POINT = ":"
 
 class Decimal:
     def __init__(
-        self, integer: Integer, exponent: int, *, decimal_point: str = DECIMAL_POINT
+        self, significant_figures: Integer, exponent: int, *, decimal_point: str = DECIMAL_POINT
     ) -> None:
-        self._integer, self._exponent = self._rstrip(integer, exponent)
+        self._integer, self._exponent = self._rstrip(significant_figures, exponent)
         self._decimal_point = decimal_point
 
     @staticmethod
@@ -18,11 +19,11 @@ class Decimal:
         try:
             index = value.index(decimal_point)
         except ValueError:
-            return Decimal(Integer.parse(value, base), 0, decimal_point=decimal_point)
+            return Decimal(integer.parse(value, base), 0, decimal_point=decimal_point)
 
-        integer = value[:index] + value[index + 1 :]
+        integer_str = value[:index] + value[index + 1 :]
         exponent = index - len(value) + 1
-        return Decimal(Integer.parse(integer, base), exponent, decimal_point=decimal_point)
+        return Decimal(integer.parse(integer_str, base), exponent, decimal_point=decimal_point)
 
     @property
     def base(self) -> Base:
@@ -66,23 +67,26 @@ class Decimal:
 
     def __str__(self) -> str:
         sign = "" if self._integer.sign == Sign.POSITIVE else "-"
-        integer = str(abs(self._integer))
+        intger_str = str(abs(self._integer))
         if self._exponent < 0:
-            if len(integer) <= abs(self._exponent):
-                integer = "0" * (abs(self._exponent) - len(integer) + 1) + integer
+            if len(intger_str) <= abs(self._exponent):
+                intger_str = "0" * (abs(self._exponent) - len(intger_str) + 1) + intger_str
             return (
-                sign + integer[: self._exponent] + self._decimal_point + integer[self._exponent :]
+                sign
+                + intger_str[: self._exponent]
+                + self._decimal_point
+                + intger_str[self._exponent :]
             )
         if self._exponent > 0:
-            return sign + integer + "0" * self._exponent + self._decimal_point
-        return sign + integer + self._decimal_point
+            return sign + intger_str + "0" * self._exponent + self._decimal_point
+        return sign + intger_str + self._decimal_point
 
     @staticmethod
-    def _rstrip(integer: Integer, exponent: int) -> tuple[Integer, int]:
+    def _rstrip(value: Integer, exponent: int) -> tuple[Integer, int]:
         index = 0
-        for digit in reversed(integer.digits):
+        for digit in reversed(value.digits):
             if digit != 0:
                 break
             index += 1
 
-        return integer >> index, exponent + index
+        return value >> index, exponent + index

@@ -24,15 +24,6 @@ class Integer:
         self._sign = sign
         self._base = base
 
-    @staticmethod
-    def parse(value: str, base: Base = Base36) -> "Integer":
-        sign = Sign.POSITIVE if value[0] != "-" else Sign.NEGATIVE
-        if value[0] in ("+", "-"):
-            value = value[1:]
-
-        digits = [base.to_base10(digit) for digit in reversed(value)]
-        return Integer(digits, sign, base)
-
     @property
     def digits(self) -> list[int]:
         return list(reversed(self._rdigits))
@@ -44,18 +35,6 @@ class Integer:
     @property
     def base(self) -> Base:
         return self._base
-
-    @staticmethod
-    def from_base10(value: int, base: Base = Base36) -> "Integer":
-        sign = Sign.POSITIVE if value >= 0 else Sign.NEGATIVE
-        value = abs(value)
-
-        digits = []
-        while value > 0:
-            digits.append(value % base.base())
-            value //= base.base()
-
-        return Integer(digits, sign, base)
 
     def __neg__(self) -> Self:
         return self.__class__(self._rdigits.copy(), -self._sign, self._base)
@@ -133,3 +112,23 @@ class Integer:
                 index = i + 1
                 break
         return reversed_digits[:index]
+
+
+def parse(value: str | int, base: Base = Base36) -> Integer:
+    if isinstance(value, int):
+        sign = Sign.POSITIVE if value >= 0 else Sign.NEGATIVE
+        value = abs(value)
+
+        digits = []
+        while value > 0:
+            digits.append(value % base.base())
+            value //= base.base()
+
+        return Integer(digits, sign, base)
+
+    sign = Sign.POSITIVE if value[0] != "-" else Sign.NEGATIVE
+    if value[0] in ("+", "-"):
+        value = value[1:]
+
+    digits = [base.to_base10(digit) for digit in reversed(value)]
+    return Integer(digits, sign, base)

@@ -1,5 +1,5 @@
 from lexorank.base import Base10, Base36, Base64
-from lexorank.integer import Integer
+from lexorank.integer import parse
 
 
 def test_parse():
@@ -10,7 +10,7 @@ def test_parse():
     ]
 
     for c in cases:
-        got = Integer.parse(*c["in"]).digits
+        got = parse(*c["in"]).digits
         assert got == c["want"]
 
 
@@ -22,7 +22,7 @@ def test_from_base10():
     ]
 
     for c in cases:
-        got = Integer.from_base10(*c["in"]).digits
+        got = parse(*c["in"]).digits
         assert got == c["want"]
 
 
@@ -36,8 +36,8 @@ def test_add():
     ]
 
     for c in cases:
-        a = Integer.from_base10(c["in"][0])
-        b = Integer.from_base10(c["in"][1])
+        a = parse(c["in"][0])
+        b = parse(c["in"][1])
         got = (a + b).to_base10()
         assert got == c["want"]
 
@@ -54,8 +54,8 @@ def test_mul():
     ]
 
     for c in cases:
-        a = Integer.from_base10(c["in"][0])
-        b = Integer.from_base10(c["in"][1])
+        a = parse(c["in"][0])
+        b = parse(c["in"][1])
         got = (a * b).to_base10()
         assert got == c["want"]
 
@@ -67,7 +67,7 @@ def test_lshift():
     ]
 
     for c in cases:
-        a = Integer.from_base10(c["in"][0])
+        a = parse(c["in"][0])
         got = (a << c["in"][1]).to_base10()
         assert got == c["want"]
 
@@ -79,7 +79,7 @@ def test_rshift():
     ]
 
     for c in cases:
-        a = Integer.from_base10(c["in"][0])
+        a = parse(c["in"][0])
         got = (a >> c["in"][1]).to_base10()
         assert got == c["want"]
 
@@ -93,5 +93,5 @@ def test_str():
     ]
 
     for c in cases:
-        got = str(Integer.from_base10(*c["in"]))
+        got = str(parse(*c["in"]))
         assert got == c["want"]
