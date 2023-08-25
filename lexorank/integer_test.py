@@ -7,15 +7,6 @@ def test_parse():
         {"in": ("123", Base10), "want": [1, 2, 3]},
         {"in": ("ri", Base36), "want": [27, 18]},
         {"in": ("r^i", Base64), "want": [55, 36, 46]},
-    ]
-
-    for c in cases:
-        got = parse(*c["in"]).digits
-        assert got == c["want"]
-
-
-def test_from_base10():
-    cases = [
         {"in": (123, Base10), "want": [1, 2, 3]},
         {"in": (3 * 36 + 4, Base36), "want": [3, 4]},
         {"in": (20 * 64**2 + 1, Base64), "want": [20, 0, 1]},
