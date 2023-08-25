@@ -1,12 +1,14 @@
-from lexorank import integer
+from lexorank import decimal, integer
 from lexorank.base import Base10, Base36, Base64
 from lexorank.decimal import Decimal
-from lexorank import decimal
 
 
 def test_parse():
     cases = [
         {"in": ("12:3", Base10), "want": "12:3"},
+        {"in": (0.5, Base36), "want": "0:i"},
+        {"in": (-0.5, Base36), "want": "-0:i"},
+        {"in": (10, Base36), "want": "a:"},
         {"in": ("0000:00ri", Base36), "want": "0:00ri"},
         {"in": ("-0000:00ri", Base36), "want": "-0:00ri"},
         {"in": ("r^i", Base64), "want": "r^i:"},

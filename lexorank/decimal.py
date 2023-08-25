@@ -81,7 +81,36 @@ class Decimal:
         return value >> index, exponent + index
 
 
-def parse(value: str, base: Base = Base36, *, decimal_point: str = DECIMAL_POINT) -> Decimal:
+def parse(
+    value: str | int | float, base: Base = Base36, *, decimal_point: str = DECIMAL_POINT
+) -> Decimal:
+    if isinstance(value, int):
+        return Decimal(integer.parse(value, base), 0, decimal_point=decimal_point)
+
+    if isinstance(value, float):
+        # WARN: This is not accurate.
+        whole = integer.parse(int(value), base)
+        if len(whole) >= 10 or value == 0:
+            return Decimal(whole, 0, decimal_point=decimal_point)
+        if abs(value) >= 1:
+            exponent = len(whole) - 10
+        else:
+            # TODO: more accurate
+            exponent = -9
+            v = abs(value)
+            while True:
+                v *= base.base()
+                exponent -= 1
+                if v >= 1:
+                    break
+                if exponent <= -150:
+                    break
+        return Decimal(
+            integer.parse(int(value * (base.base() ** -exponent)), base),
+            exponent,
+            decimal_point=decimal_point,
+        )
+
     try:
         index = value.index(decimal_point)
     except ValueError:
