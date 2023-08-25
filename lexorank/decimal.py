@@ -68,7 +68,7 @@ class Decimal:
         sign = "" if self._integer.sign == Sign.POSITIVE else "-"
         integer = str(abs(self._integer))
         if self._exponent < 0:
-            if len(integer) < abs(self._exponent):
+            if len(integer) <= abs(self._exponent):
                 integer = "0" * (abs(self._exponent) - len(integer) + 1) + integer
             return (
                 sign + integer[: self._exponent] + self._decimal_point + integer[self._exponent :]

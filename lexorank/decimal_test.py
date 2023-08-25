@@ -58,7 +58,8 @@ def test_whole():
 def test_str():
     cases = [
         {"in": ("12345", Base10, -3), "want": "12:345"},
-        {"in": ("21i3v9", Base36, -4), "want": "21:i3v9"},
+        {"in": ("21i3v9", Base36, 1), "want": "21i3v90:"},
+        {"in": ("21i3v9", Base36, -6), "want": "0:21i3v9"},
         {"in": ("21i3v9", Base36, -10), "want": "0:000021i3v9"},
         {"in": ("21i3v9^", Base64, 2), "want": "21i3v9^00:"},
     ]
