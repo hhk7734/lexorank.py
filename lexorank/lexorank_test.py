@@ -12,7 +12,7 @@ def test_parse():
     for c in cases:
         got = LexoRank.parse(*c["in"])
         assert got.bucket == c["want"][0]
-        assert str(got.decimal) == c["want"][1]
+        assert str(got.rank) == c["want"][1]
         assert str(got) == c["want"][2]
 
 

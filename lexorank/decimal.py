@@ -14,17 +14,6 @@ class Decimal:
         self._integer, self._exponent = self._rstrip(significant_figures, exponent)
         self._decimal_point = decimal_point
 
-    @staticmethod
-    def parse(value: str, base: Base = Base36, *, decimal_point: str = DECIMAL_POINT) -> "Decimal":
-        try:
-            index = value.index(decimal_point)
-        except ValueError:
-            return Decimal(integer.parse(value, base), 0, decimal_point=decimal_point)
-
-        integer_str = value[:index] + value[index + 1 :]
-        exponent = index - len(value) + 1
-        return Decimal(integer.parse(integer_str, base), exponent, decimal_point=decimal_point)
-
     @property
     def base(self) -> Base:
         return self._integer.base
@@ -90,3 +79,14 @@ class Decimal:
             index += 1
 
         return value >> index, exponent + index
+
+
+def parse(value: str, base: Base = Base36, *, decimal_point: str = DECIMAL_POINT) -> Decimal:
+    try:
+        index = value.index(decimal_point)
+    except ValueError:
+        return Decimal(integer.parse(value, base), 0, decimal_point=decimal_point)
+
+    integer_str = value[:index] + value[index + 1 :]
+    exponent = index - len(value) + 1
+    return Decimal(integer.parse(integer_str, base), exponent, decimal_point=decimal_point)

@@ -3,7 +3,7 @@ from functools import lru_cache
 
 from typing_extensions import Self
 
-from lexorank import integer
+from lexorank import decimal, integer
 from lexorank.base import Base, Base36
 from lexorank.decimal import DECIMAL_POINT, Decimal
 
@@ -24,13 +24,13 @@ class LexoRank:
     def __init__(
         self,
         bucekt: Bucket,
-        decimal: Decimal,
+        rank: Decimal,
         *,
         bucket_separator: str = BUCKET_SEPARATOR,
         whole_number_size: int = WHOLE_NUMBER_SIZE,
     ) -> None:
         self._bucket = bucekt
-        self._decimal = decimal
+        self._rank = rank
         self._bucket_separator = bucket_separator
         self._whole_number_size = whole_number_size
 
@@ -47,9 +47,9 @@ class LexoRank:
             raise ValueError(f"invalid lexorank format: {value}")
 
         bucket = Bucket(int(value[0]))
-        decimal = Decimal.parse(value[2:], base, decimal_point=decimal_point)
+        decimal_ = decimal.parse(value[2:], base, decimal_point=decimal_point)
         return LexoRank(
-            bucket, decimal, bucket_separator=bucket_separator, whole_number_size=whole_number_size
+            bucket, decimal_, bucket_separator=bucket_separator, whole_number_size=whole_number_size
         )
 
     @staticmethod
@@ -62,10 +62,10 @@ class LexoRank:
         bucket_separator: str = BUCKET_SEPARATOR,
         whole_number_size: int = WHOLE_NUMBER_SIZE,
     ) -> "LexoRank":
-        max_decimal = Decimal.parse(
+        max_decimal = decimal.parse(
             "1" + "0" * whole_number_size, base, decimal_point=decimal_point
         )
-        half_decimal = Decimal.parse(
+        half_decimal = decimal.parse(
             "0" + decimal_point + base.from_base10(base.base() // 2),
             base,
             decimal_point=decimal_point,
@@ -80,8 +80,8 @@ class LexoRank:
     def next(self, step: int = 16) -> Self:
         return self.__class__(
             self._bucket,
-            self._decimal
-            + self._step(step, self._decimal.base, decimal_point=self._decimal.decimal_point),  # type: ignore[arg-type]
+            self._rank
+            + self._step(step, self._rank.base, decimal_point=self._rank.decimal_point),  # type: ignore[arg-type]
         )
 
     @property
@@ -89,17 +89,19 @@ class LexoRank:
         return self._bucket
 
     @property
-    def decimal(self) -> Decimal:
-        return self._decimal
+    def rank(self) -> Decimal:
+        return self._rank
 
     def __str__(self) -> str:
-        decimal = str(self._decimal)
-        index = decimal.index(self._decimal.decimal_point)
+        rank = str(self._rank)
+        index = rank.index(self._rank.decimal_point)
 
-        whole = decimal[:index].zfill(self._whole_number_size)
-        decimal = decimal[index + 1 :]
+        whole = rank[:index].zfill(self._whole_number_size)
+        rank = rank[index + 1 :]
 
-        return f"{self._bucket.value}{self._bucket_separator}{whole}{self._decimal.decimal_point}{decimal}"
+        return (
+            f"{self._bucket.value}{self._bucket_separator}{whole}{self._rank.decimal_point}{rank}"
+        )
 
     @staticmethod
     @lru_cache()

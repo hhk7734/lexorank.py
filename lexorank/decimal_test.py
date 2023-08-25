@@ -1,6 +1,7 @@
 from lexorank import integer
 from lexorank.base import Base10, Base36, Base64
 from lexorank.decimal import Decimal
+from lexorank import decimal
 
 
 def test_parse():
@@ -12,7 +13,7 @@ def test_parse():
     ]
 
     for c in cases:
-        got = str(Decimal.parse(*c["in"]))
+        got = str(decimal.parse(*c["in"]))
         assert got == c["want"]
 
 
