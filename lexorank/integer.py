@@ -65,7 +65,33 @@ class Integer:
     def __sub__(self, other: object) -> Self:
         other = self._type_guard(other)
 
-        raise NotImplementedError
+        if self._sign != other._sign:
+            return self + (-other)
+
+        a: Integer = self
+        b = other
+        sign = self._sign
+        if len(a) < len(b):
+            a, b = b, a
+            sign = -sign
+
+        complement = [35] * len(a)
+        for i in range(len(b)):
+            complement[-i - 1] = 35 - b._digits[-i - 1]
+
+        rdigits = []
+        carry = 1
+        base = self._base.base()
+
+        for i in range(len(a)):
+            ad = a._digits[-i - 1]
+            bd = complement[-i - 1]
+
+            result = ad + bd + carry
+            carry = result // base
+            rdigits.append(result % base)
+
+        return self.__class__(list(reversed(rdigits)), sign)
 
     def __mul__(self, other: object) -> Self:
         other = self._type_guard(other)
