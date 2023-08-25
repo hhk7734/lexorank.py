@@ -25,11 +25,13 @@ class Decimal:
     def __neg__(self) -> Self:
         return self.__class__(-self._integer, self._exponent)
 
-    def __add__(self, other: Self) -> Self:
+    def __add__(self, other: object) -> Self:
+        other = self._type_guard(other)
+
         if self._exponent == other._exponent:
             return self.__class__(self._integer + other._integer, self._exponent)
 
-        lv = self
+        lv: Decimal = self
         rv = other
         if self._exponent < other._exponent:
             lv, rv = rv, lv
@@ -40,10 +42,14 @@ class Decimal:
 
         return self.__class__(lv._integer + rv._integer, lv._exponent)
 
-    def __sub__(self, other: Self) -> Self:
+    def __sub__(self, other: object) -> Self:
+        other = self._type_guard(other)
+
         return self + (-other)
 
-    def __mul__(self, other: Self) -> Self:
+    def __mul__(self, other: object) -> Self:
+        other = self._type_guard(other)
+
         return self.__class__(self._integer * other._integer, self._exponent + other._exponent)
 
     def whole(self) -> Integer:
@@ -80,9 +86,16 @@ class Decimal:
 
         return value >> index, exponent + index
 
+    def _type_guard(self, other: object) -> "Decimal":  # type: ignore[return-value]
+        if isinstance(other, (int, str, float, Integer)):
+            return parse(other, self.base)
+        if isinstance(other, Decimal):
+            return other
+        raise ValueError(f"unsupported operand type(s) {type(other)}")
+
 
 def parse(
-    value: str | int | float, base: Base = Base36, *, decimal_point: str = DECIMAL_POINT
+    value: str | int | float | Integer, base: Base = Base36, *, decimal_point: str = DECIMAL_POINT
 ) -> Decimal:
     if isinstance(value, int):
         return Decimal(integer.parse(value, base), 0, decimal_point=decimal_point)
@@ -110,6 +123,9 @@ def parse(
             exponent,
             decimal_point=decimal_point,
         )
+
+    if isinstance(value, Integer):
+        return Decimal(value, 0, decimal_point=decimal_point)
 
     try:
         index = value.index(decimal_point)

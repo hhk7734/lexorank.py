@@ -9,6 +9,7 @@ def test_parse():
         {"in": (0.5, Base36), "want": "0:i"},
         {"in": (-0.5, Base36), "want": "-0:i"},
         {"in": (10, Base36), "want": "a:"},
+        {"in": (integer.parse(10), Base36), "want": "a:"},
         {"in": ("0000:00ri", Base36), "want": "0:00ri"},
         {"in": ("-0000:00ri", Base36), "want": "-0:00ri"},
         {"in": ("r^i", Base64), "want": "r^i:"},
