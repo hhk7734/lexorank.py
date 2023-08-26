@@ -25,6 +25,9 @@ class Decimal:
     def __neg__(self) -> Self:
         return self.__class__(-self._integer, self._exponent)
 
+    def __abs__(self) -> Self:
+        return self.__class__(abs(self._integer), self._exponent)
+
     def __add__(self, other: object) -> Self:
         other = self._type_guard(other)
 
@@ -52,6 +55,29 @@ class Decimal:
 
         return self.__class__(self._integer * other._integer, self._exponent + other._exponent)
 
+    def __eq__(self, other: object) -> bool:
+        other = self._type_guard(other)
+
+        return self._integer == other._integer and self._exponent == other._exponent
+
+    def __gt__(self, other: object) -> bool:
+        other = self._type_guard(other)
+
+        if self._exponent == other._exponent:
+            return self._integer > other._integer
+        if self._exponent > other._exponent:
+            return self._integer << (self._exponent - other._exponent) > other._integer
+        return self._integer > other._integer << (other._exponent - self._exponent)
+
+    def __ge__(self, other: object):
+        return self.__gt__(other) or self.__eq__(other)
+
+    def __lt__(self, other: object):
+        return not self.__ge__(other)
+
+    def __le__(self, other: object):
+        return not self.__gt__(other)
+
     def whole(self) -> Integer:
         if self._exponent < 0:
             return self._integer >> abs(self._exponent)
@@ -78,6 +104,9 @@ class Decimal:
 
     def __float__(self) -> float:
         return float(int(self._integer) * (self.base.base() ** self._exponent))
+
+    def __len__(self) -> int:
+        return len(self._integer)
 
     @staticmethod
     def _rstrip(value: Integer, exponent: int) -> tuple[Integer, int]:
