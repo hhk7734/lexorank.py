@@ -6,8 +6,17 @@ remove_local:
 
 .PHONY: install_test
 install_test:
-	poetry install --no-root --without dev
+	poetry install --no-root --without dev,publish
+
+.PHONY: install_publish
+install_test:
+	poetry install --no-root --without dev,test
 
 .PHONY: test
 test:
 	poetry run pytest -s
+
+.PHONY: publish
+publish:
+	poetry run python -m build
+	poetry run twine upload dist/*
