@@ -40,10 +40,10 @@ class Decimal:
             lv, rv = rv, lv
 
         diff = lv._exponent - rv._exponent
-        lv._integer <<= diff
-        lv._exponent -= diff
+        lv_integer = lv._integer << diff
+        lv_exponent = lv._exponent - diff
 
-        return self.__class__(lv._integer + rv._integer, lv._exponent)
+        return self.__class__(lv_integer + rv._integer, lv_exponent)
 
     def __sub__(self, other: object) -> Self:
         other = self._type_guard(other)
@@ -78,10 +78,13 @@ class Decimal:
     def __le__(self, other: object):
         return not self.__gt__(other)
 
-    def whole(self) -> Integer:
+    def whole_number(self) -> Integer:
         if self._exponent < 0:
             return self._integer >> abs(self._exponent)
         return self._integer << self._exponent
+
+    def decimal(self) -> "Decimal":
+        return self - self.whole_number()
 
     def __str__(self) -> str:
         sign = "" if self._integer.sign == Sign.POSITIVE else "-"
@@ -101,6 +104,9 @@ class Decimal:
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} value={self}, base={self.base.base()}>"
+
+    def __int__(self) -> int:
+        return int(self.whole_number())
 
     def __float__(self) -> float:
         return float(int(self._integer) * (self.base.base() ** self._exponent))

@@ -22,35 +22,34 @@ def test_parse():
 
 def test_add():
     cases = [
-        {"in": (("12345", Base10, -3), ("55", Base10, -1)), "want": 17.845},
-        {"in": (("12345", Base10, 1), ("55", Base10, -1)), "want": 123455.5},
-        {"in": (("12345", Base10, 1), ("55", Base10, 1)), "want": 124000},
-        {"in": (("12345", Base10, 1), ("-55", Base10, 1)), "want": 1735560},
-        {"in": (("-12345", Base10, 1), ("-55", Base10, 1)), "want": -124000},
-        {"in": (("-12345", Base10, 1), ("55", Base10, 1)), "want": -1735560},
+        {"in": (("12:345", Base10), ("5:5", Base10)), "want": ("17:845", Base10)},
+        {"in": (("123450", Base10), ("5:5", Base10)), "want": ("123455:5", Base10)},
+        {"in": (("123450", Base10), ("550", Base10)), "want": ("124000", Base10)},
+        {"in": (("123450", Base10), ("-550", Base10)), "want": ("122900", Base10)},
+        {"in": (("-123450", Base10), ("-550", Base10)), "want": ("-124000", Base10)},
+        {"in": (("-123450", Base10), ("550", Base10)), "want": ("-122900", Base10)},
     ]
 
     for c in cases:
-        a = Decimal(integer.parse(c["in"][0][0], c["in"][0][1]), c["in"][0][2])
-        b = Decimal(integer.parse(c["in"][1][0], c["in"][1][1]), c["in"][1][2])
-        assert float(a + b) == c["want"]
+        a = decimal.parse(*c["in"][0])
+        b = decimal.parse(*c["in"][1])
+        assert a + b == decimal.parse(*c["want"])
 
 
 def test_mul():
     cases = [
-        {"in": (("12345", Base10, -3), ("55", Base10, -1)), "want": "67:8975"},
-        {"in": (("12345", Base10, 1), ("5", Base10, -1)), "want": "61725:"},
-        {"in": (("12as5", Base36, 0), ("i", Base36, -1)), "want": "j5e2:i"},
-        {"in": (("12as5", Base36, 0), ("-i", Base36, -1)), "want": "-j5e2:i"},
-        {"in": (("-12as5", Base36, 0), ("i", Base36, -1)), "want": "-j5e2:i"},
-        {"in": (("-12as5", Base36, 0), ("-i", Base36, -1)), "want": "j5e2:i"},
+        {"in": (("12:345", Base10), ("55", Base10)), "want": ("678:975", Base10)},
+        {"in": (("12:345", Base10), ("0:5", Base10)), "want": ("6:1725", Base10)},
+        {"in": (("12as5", Base36), ("0:i", Base36)), "want": ("j5e2:i", Base36)},
+        {"in": (("12as5", Base36), ("-0:i", Base36)), "want": ("-j5e2:i", Base36)},
+        {"in": (("-12as5", Base36), ("0:i", Base36)), "want": ("-j5e2:i", Base36)},
+        {"in": (("-12as5", Base36), ("-0:i", Base36)), "want": ("j5e2:i", Base36)},
     ]
 
     for c in cases:
-        a = Decimal(integer.parse(c["in"][0][0], c["in"][0][1]), c["in"][0][2])
-        b = Decimal(integer.parse(c["in"][1][0], c["in"][1][1]), c["in"][1][2])
-        got = str(a * b)
-        assert got == c["want"]
+        a = decimal.parse(*c["in"][0])
+        b = decimal.parse(*c["in"][1])
+        assert a * b == decimal.parse(*c["want"])
 
 
 def test_eq():
@@ -99,15 +98,26 @@ def test_gt():
         assert (a > b) == (c["in"][0] > c["in"][1])
 
 
-def test_whole():
+def test_whole_number():
     cases = [
         {"in": ("12345", Base10, -3), "want": "12"},
         {"in": ("21i3v9", Base36, -4), "want": "21"},
     ]
 
     for c in cases:
-        got = str(Decimal(integer.parse(c["in"][0], c["in"][1]), c["in"][2]).whole())
+        got = str(Decimal(integer.parse(c["in"][0], c["in"][1]), c["in"][2]).whole_number())
         assert got == c["want"]
+
+
+def test_decimal():
+    cases = [
+        {"in": ("12:345", Base10), "want": ("0:345", Base10)},
+        {"in": ("21:i3v9", Base36), "want": ("0:i3v9", Base36)},
+    ]
+
+    for c in cases:
+        got = decimal.parse(*c["in"]).decimal()
+        assert got == decimal.parse(*c["want"])
 
 
 def test_str():
