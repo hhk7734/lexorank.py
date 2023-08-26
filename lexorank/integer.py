@@ -75,13 +75,14 @@ class Integer:
             a, b = b, a
             sign = -sign
 
-        complement = [35] * len(a)
+        base = self._base.base()
+
+        complement = [base - 1] * len(a)
         for i in range(len(b)):
-            complement[-i - 1] = 35 - b._digits[-i - 1]
+            complement[-i - 1] = base - 1 - b._digits[-i - 1]
 
         rdigits = []
         carry = 1
-        base = self._base.base()
 
         for i in range(len(a)):
             ad = a._digits[-i - 1]
@@ -91,7 +92,7 @@ class Integer:
             carry = result // base
             rdigits.append(result % base)
 
-        return self.__class__(list(reversed(rdigits)), sign)
+        return self.__class__(list(reversed(rdigits)), sign, self._base)
 
     def __mul__(self, other: object) -> Self:
         other = self._type_guard(other)
