@@ -1,5 +1,6 @@
+from lexorank import lexorank
 from lexorank.base import Base10, Base36, Base64
-from lexorank.lexorank import Bucket, LexoRank
+from lexorank.lexorank import Bucket
 
 
 def test_parse():
@@ -10,7 +11,7 @@ def test_parse():
     ]
 
     for c in cases:
-        got = LexoRank.parse(*c["in"])
+        got = lexorank.parse(*c["in"])
         assert got.bucket == c["want"][0]
         assert str(got.rank) == c["want"][1]
         assert str(got) == c["want"][2]
@@ -24,15 +25,15 @@ def test_middle():
     ]
 
     for c in cases:
-        got = LexoRank.middle(*c["in"])
+        got = lexorank.middle(*c["in"])
         assert str(got) == c["want"]
 
 
 def test_next():
     cases = [
-        {"in": LexoRank.middle(Bucket.BUCEKT_0, Base10), "want": "0|500016:"},
-        {"in": LexoRank.middle(Bucket.BUCEKT_0, Base36), "want": "0|i0000g:"},
-        {"in": LexoRank.middle(Bucket.BUCEKT_0, Base64), "want": "0|W0000G:"},
+        {"in": lexorank.middle(Bucket.BUCEKT_0, Base10), "want": "0|500016:"},
+        {"in": lexorank.middle(Bucket.BUCEKT_0, Base36), "want": "0|i0000g:"},
+        {"in": lexorank.middle(Bucket.BUCEKT_0, Base64), "want": "0|W0000G:"},
     ]
 
     for c in cases:
