@@ -68,10 +68,10 @@ class Integer:
         if self._sign != other._sign:
             return self + (-other)
 
-        a: Integer = self
-        b = other
+        a: Integer = abs(self)
+        b = abs(other)
         sign = self._sign
-        if len(a) < len(b):
+        if a < b:
             a, b = b, a
             sign = -sign
 
@@ -180,6 +180,9 @@ class Integer:
 
     def __len__(self) -> int:
         return len(self._digits)
+
+    def copy(self) -> Self:
+        return self.__class__(self._digits.copy(), self._sign, self._base)
 
     @staticmethod
     def _lstrip(digits: list[int]) -> list[int]:

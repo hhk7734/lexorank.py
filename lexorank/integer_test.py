@@ -38,6 +38,8 @@ def test_add():
 
 def test_sub():
     cases = [
+        {"in": (124, 123, Base10)},
+        {"in": (123, 124, Base10)},
         {"in": (123, 123, Base10)},
         {"in": (123, -123, Base10)},
         {"in": (-123, 123, Base10)},
