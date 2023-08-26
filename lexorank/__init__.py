@@ -6,6 +6,7 @@ from lexorank.lexorank import (
     WHOLE_NUMBER_SIZE,
     Bucket,
     LexoRank,
+    between,
     middle,
     parse,
 )

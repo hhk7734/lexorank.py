@@ -47,22 +47,42 @@ class LexoRank:
         return self.next(-step)
 
     def next(self, step: int = 16) -> Self:
-        return self.__class__(self._bucket, self._rank + step)
+        return self.__class__(
+            self._bucket,
+            Decimal(self._rank.whole_number(), 0, decimal_point=self._rank.decimal_point) + step,
+            bucket_separator=self._bucket_separator,
+            whole_number_size=self._whole_number_size,
+        )
 
     def __add__(self, other: object) -> Self:
         other = self._type_guard(other)
 
-        return self.__class__(self._bucket, self._rank + other._rank)
+        return self.__class__(
+            self._bucket,
+            self._rank + other._rank,
+            bucket_separator=self._bucket_separator,
+            whole_number_size=self._whole_number_size,
+        )
 
     def __sub__(self, other: object) -> Self:
         other = self._type_guard(other)
 
-        return self.__class__(self._bucket, self._rank - other._rank)
+        return self.__class__(
+            self._bucket,
+            self._rank - other._rank,
+            bucket_separator=self._bucket_separator,
+            whole_number_size=self._whole_number_size,
+        )
 
     def __mul__(self, other: object) -> Self:
         other = self._type_guard(other)
 
-        return self.__class__(self._bucket, self._rank * other._rank)
+        return self.__class__(
+            self._bucket,
+            self._rank * other._rank,
+            bucket_separator=self._bucket_separator,
+            whole_number_size=self._whole_number_size,
+        )
 
     def __eq__(self, other: object) -> bool:
         other = self._type_guard(other)
@@ -100,6 +120,12 @@ class LexoRank:
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} value={self} base={self._rank.base.base()}>"
+
+    def __float__(self) -> float:
+        return float(self._rank)
+
+    def __int__(self) -> int:
+        return int(self._rank)
 
     def _type_guard(self, other: object) -> "LexoRank":
         if isinstance(other, LexoRank):
@@ -153,3 +179,21 @@ def middle(
         bucket_separator=bucket_separator,
         whole_number_size=whole_number_size,
     )
+
+
+def between(a: LexoRank | None, b: LexoRank | None) -> LexoRank:
+    if a is None:
+        if b is None:
+            raise ValueError("a and b cannot be None at the same time")
+        return b.prev()
+    if b is None:
+        return a.next()
+
+    if a > b:
+        a, b = b, a
+    mid = (a + b) * 0.5
+    if int(a) < int(mid) < int(b):
+        return LexoRank(a.bucket, decimal.parse(mid.rank.whole_number()))
+
+    # TODO: shorten the length of the decimal part
+    return mid
