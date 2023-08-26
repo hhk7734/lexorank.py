@@ -64,6 +64,29 @@ class LexoRank:
 
         return self.__class__(self._bucket, self._rank * other._rank)
 
+    def __eq__(self, other: object) -> bool:
+        other = self._type_guard(other)
+
+        return self._bucket == other._bucket and self._rank == other._rank
+
+    def __gt__(self, other: object) -> bool:
+        other = self._type_guard(other)
+
+        if self._bucket.value > other._bucket.value:
+            return True
+        if self._bucket.value < other._bucket.value:
+            return False
+        return self._rank > other._rank
+
+    def __ge__(self, other: object):
+        return self.__gt__(other) or self.__eq__(other)
+
+    def __lt__(self, other: object):
+        return not self.__ge__(other)
+
+    def __le__(self, other: object):
+        return not self.__gt__(other)
+
     def __str__(self) -> str:
         rank = str(self._rank)
         index = rank.index(self._rank.decimal_point)

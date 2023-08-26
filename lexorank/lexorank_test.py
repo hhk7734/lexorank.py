@@ -39,3 +39,41 @@ def test_next():
     for c in cases:
         got = c["in"].next()
         assert str(got) == c["want"]
+
+
+def test_add():
+    cases = [
+        {"in": ("0|000001:", "0|000002:", Base36), "want": "0|000003:"},
+    ]
+
+    for c in cases:
+        got = lexorank.parse(c["in"][0], c["in"][2])
+        other = lexorank.parse(c["in"][1], c["in"][2])
+        assert (got + other) == c["want"]
+
+
+def test_eq():
+    cases = [
+        {"in": ("0|000001:", "0|000002:", Base36), "want": False},
+        {"in": ("0|000001:", "0|000001:", Base36), "want": True},
+        {"in": ("0|000002:", "0|000001:", Base36), "want": False},
+    ]
+
+    for c in cases:
+        got = lexorank.parse(c["in"][0], c["in"][2])
+        other = lexorank.parse(c["in"][1], c["in"][2])
+        assert (got == other) == c["want"]
+
+
+def test_gt():
+    cases = [
+        {"in": ("0|000001:", "0|000002:", Base36), "want": False},
+        {"in": ("0|000001:", "0|000001:", Base36), "want": False},
+        {"in": ("0|000002:", "0|000001:", Base36), "want": True},
+        {"in": ("1|000001:", "0|000001:", Base36), "want": True},
+    ]
+
+    for c in cases:
+        got = lexorank.parse(c["in"][0], c["in"][2])
+        other = lexorank.parse(c["in"][1], c["in"][2])
+        assert (got > other) == c["want"]
