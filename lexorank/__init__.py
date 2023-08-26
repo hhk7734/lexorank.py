@@ -12,7 +12,7 @@ from lexorank.lexorank import (
 )
 
 try:
-    __version__ = version("loggingx-py")
+    __version__ = version("lexorank-py")
 
 except PackageNotFoundError:
     pass
