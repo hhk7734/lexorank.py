@@ -6,6 +6,7 @@ from typing_extensions import Self
 from lexorank import decimal
 from lexorank.base import Base, Base36
 from lexorank.decimal import DECIMAL_POINT, Decimal
+from lexorank.integer import Integer
 
 BUCKET_SEPARATOR = "|"
 WHOLE_NUMBER_SIZE = 6
@@ -48,6 +49,21 @@ class LexoRank:
     def next(self, step: int = 16) -> Self:
         return self.__class__(self._bucket, self._rank + step)
 
+    def __add__(self, other: object) -> Self:
+        other = self._type_guard(other)
+
+        return self.__class__(self._bucket, self._rank + other._rank)
+
+    def __sub__(self, other: object) -> Self:
+        other = self._type_guard(other)
+
+        return self.__class__(self._bucket, self._rank - other._rank)
+
+    def __mul__(self, other: object) -> Self:
+        other = self._type_guard(other)
+
+        return self.__class__(self._bucket, self._rank * other._rank)
+
     def __str__(self) -> str:
         rank = str(self._rank)
         index = rank.index(self._rank.decimal_point)
@@ -61,6 +77,23 @@ class LexoRank:
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} value={self} base={self._rank.base.base()}>"
+
+    def _type_guard(self, other: object) -> "LexoRank":
+        if isinstance(other, LexoRank):
+            return other
+        if isinstance(other, str):
+            return parse(
+                other,
+                self._rank.base,
+                decimal_point=self._rank.decimal_point,
+                bucket_separator=self._bucket_separator,
+                whole_number_size=self._whole_number_size,
+            )
+        if isinstance(other, (int, float, Integer)):
+            return LexoRank(self._bucket, decimal.parse(other, self._rank.base))
+        if isinstance(other, Decimal):
+            return LexoRank(self._bucket, other)
+        raise ValueError(f"unsupported operand type(s) {type(other)}")
 
 
 def parse(
