@@ -9,7 +9,7 @@ install_test:
 	poetry install --no-root --without dev,publish
 
 .PHONY: install_publish
-install_test:
+install_publish:
 	poetry install --no-root --without dev,test
 
 .PHONY: test
