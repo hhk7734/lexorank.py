@@ -37,6 +37,7 @@ name = "lexorank-py"
 version = "0"
 description = ""
 authors = ["Hyeonki Hong <hhk7734@gmail.com>"]
+packages = [{ include = "lexorank" }]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"

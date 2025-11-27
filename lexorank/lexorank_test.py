@@ -5,8 +5,8 @@ from lexorank.lexorank import Bucket
 
 def test_parse():
     cases = [
-        {"in": ("0|000012:3", Base10), "want": (Bucket.BUCEKT_0, "12:3", "0|000012:3")},
-        {"in": ("0|00ri01:000000", Base36), "want": (Bucket.BUCEKT_0, "ri01:", "0|00ri01:")},
+        {"in": ("0|000012:3", Base10), "want": (Bucket.BUCKET_0, "12:3", "0|000012:3")},
+        {"in": ("0|00ri01:000000", Base36), "want": (Bucket.BUCKET_0, "ri01:", "0|00ri01:")},
         {"in": ("1|000r^i:1", Base64), "want": (Bucket.BUCKET_1, "r^i:1", "1|000r^i:1")},
     ]
 
@@ -19,9 +19,9 @@ def test_parse():
 
 def test_middle():
     cases = [
-        {"in": (Bucket.BUCEKT_0, Base10), "want": "0|500000:"},
-        {"in": (Bucket.BUCEKT_0, Base36), "want": "0|i00000:"},
-        {"in": (Bucket.BUCEKT_0, Base64), "want": "0|W00000:"},
+        {"in": (Bucket.BUCKET_0, Base10), "want": "0|500000:"},
+        {"in": (Bucket.BUCKET_0, Base36), "want": "0|i00000:"},
+        {"in": (Bucket.BUCKET_0, Base64), "want": "0|W00000:"},
     ]
 
     for c in cases:
@@ -31,9 +31,9 @@ def test_middle():
 
 def test_next():
     cases = [
-        {"in": lexorank.middle(Bucket.BUCEKT_0, Base10), "want": "0|500016:"},
-        {"in": lexorank.middle(Bucket.BUCEKT_0, Base36), "want": "0|i0000g:"},
-        {"in": lexorank.middle(Bucket.BUCEKT_0, Base64), "want": "0|W0000G:"},
+        {"in": lexorank.middle(Bucket.BUCKET_0, Base10), "want": "0|500016:"},
+        {"in": lexorank.middle(Bucket.BUCKET_0, Base36), "want": "0|i0000g:"},
+        {"in": lexorank.middle(Bucket.BUCKET_0, Base64), "want": "0|W0000G:"},
     ]
 
     for c in cases:
