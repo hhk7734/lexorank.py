@@ -13,7 +13,7 @@ WHOLE_NUMBER_SIZE = 6
 
 
 class Bucket(IntEnum):
-    BUCEKT_0 = 0
+    BUCKET_0 = 0
     BUCKET_1 = 1
     BUCKET_2 = 2
 

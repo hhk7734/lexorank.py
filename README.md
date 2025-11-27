@@ -11,7 +11,7 @@ from pprint import pprint
 
 from lexorank import Bucket, middle
 
-prev = middle(Bucket.BUCEKT_0)
+prev = middle(Bucket.BUCKET_0)
 ranks = [prev]
 for _ in range(9):
     ranks.append(prev.next())
