@@ -5,21 +5,16 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
 
-concurrency:
-  group: publish-lexorank-py
-  cancel-in-progress: true
-
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v3.2.0
         with:
-          python-version: "3.10"
+          install: false
+      - run: |
+          mise install python
 
       - name: Install poetry
         run: pipx install poetry
@@ -27,11 +22,10 @@ jobs:
       - name: Set Poetry environment
         run: poetry env use 3.10
 
-      - name: Install dependencies
-        run: make install_publish
-
       - name: Build and Publish
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: make publish
+        run: |
+          mise run install-publish
+          mise run publish
