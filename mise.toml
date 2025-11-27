@@ -4,11 +4,12 @@ python = "3.10"
 [tasks.install-publish]
 run = "poetry install --no-root --without dev,test"
 
+[tasks.build]
+run = "poetry run python -m build"
+
 [tasks.publish]
-run = """
-poetry run python -m build
-poetry run twine upload dist/*
-"""
+depends = ["build"]
+run = "poetry run twine upload dist/*"
 
 [tasks.install-test]
 run = "poetry install --no-root --without dev,publish"
