@@ -42,14 +42,14 @@ packages = [{ include = "lexorank" }]
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.4.1"
-black = "^23.7.0"
+black = "^26.3.1"
 isort = "^5.12.0"
 pylint = "^2.17.4"
 ipython = "^8.14.0"
 
 
 [tool.poetry.group.test.dependencies]
-pytest = "^7.4.0"
+pytest = "^9.0.3"
 
 
 [tool.poetry.group.publish.dependencies]
