@@ -11,6 +11,7 @@ readme = "README.md"
 keywords = ["lexorank"]
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
     "Intended Audience :: Developers",
 ]
 dependencies = ["typing-extensions>=4.7.1"]
